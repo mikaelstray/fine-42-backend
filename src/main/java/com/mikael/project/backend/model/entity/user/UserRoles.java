@@ -1,4 +1,4 @@
-package com.mikael.project.backend.entity.user;
+package com.mikael.project.backend.model.entity.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,5 +26,4 @@ public class UserRoles {
   @Column(nullable = false, name = "role")
   @Enumerated(EnumType.STRING)
   private Role role;
-
 }

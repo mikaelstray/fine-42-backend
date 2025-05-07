@@ -1,6 +1,6 @@
-package com.mikael.project.backend.entity.user;
+package com.mikael.project.backend.model.entity.user;
 
-import com.mikael.project.backend.entity.Fine;
+import com.mikael.project.backend.model.entity.Fine;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
