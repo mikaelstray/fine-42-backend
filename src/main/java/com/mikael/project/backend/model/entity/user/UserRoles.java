@@ -1,4 +1,4 @@
-package com.mikael.project.backend.entity.user;
+package com.mikael.project.backend.model.entity.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,12 +19,11 @@ public class UserRoles {
   @Column(nullable = false)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
   @Column(nullable = false, name = "role")
   @Enumerated(EnumType.STRING)
   private Role role;
-
 }

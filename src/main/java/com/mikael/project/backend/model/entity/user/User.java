@@ -1,6 +1,8 @@
-package com.mikael.project.backend.entity.user;
+package com.mikael.project.backend.model.entity.user;
 
-import com.mikael.project.backend.entity.Fine;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mikael.project.backend.model.entity.Fine;
+import com.mikael.project.backend.model.entity.Household;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,22 +23,31 @@ import java.util.*;
 public class User implements UserDetails {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(nullable = false)
   private Long id;
 
-  @Column
+  @Column(unique = true, nullable = false)
   private String username;
 
-  @Column
+  @Column(nullable = false)
   private String password;
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+  @JsonIgnore
   private Set<UserRoles> roles = new HashSet<>();
 
   @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonIgnore
   private List<Fine> receivedFines = new ArrayList<>();
 
   @OneToMany(mappedBy = "giver")
+  @JsonIgnore
   private List<Fine> givenFines = new ArrayList<>();
+
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "household_id")
+  @JsonIgnore
+  private Household household;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -87,6 +98,28 @@ public class User implements UserDetails {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+
+  @Override
+  public String toString() {
+    return "User{" +
+            "id=" + id +
+            ", username='" + username + '\'' +
+            '}';
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    User user = (User) o;
+    return id != null && id.equals(user.id);
+  }
+
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
   }
 
 }
