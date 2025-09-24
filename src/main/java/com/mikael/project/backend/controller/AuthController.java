@@ -39,7 +39,7 @@ public class AuthController {
 
     ResponseCookie cookie = ResponseCookie.from(AUTH_COOKIE_NAME, authResponse.token())
             .httpOnly(true)
-            .secure(false) //TODO: fix https
+            .secure(true)
             .path("/")
             .maxAge(60 * 60 * 24)
             .sameSite("Strict")
@@ -58,7 +58,7 @@ public class AuthController {
 
     ResponseCookie cookie = ResponseCookie.from(AUTH_COOKIE_NAME, authResponse.token())
             .httpOnly(true)
-            .secure(false) //fix https
+            .secure(true) //fix https
             .path("/")
             .maxAge(60 * 60 * 24)
             .sameSite("Strict")
