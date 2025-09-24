@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -74,5 +75,4 @@ public class AuthService {
     UserResponse userDto = userMapper.toDto(userService.findByUsername(request.username()));
     return new AuthResponse(token, "Bearer", userDto);
   }
-
 }
