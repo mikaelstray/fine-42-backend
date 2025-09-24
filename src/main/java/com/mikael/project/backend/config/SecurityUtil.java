@@ -27,6 +27,8 @@ public class SecurityUtil {
   /** Hent autentisert bruker eller tom hvis anonym. */
   public Optional<User> getCurrentUserOptional() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+    //TODO: avoid db call
     logger.info(auth);
     if (auth == null ||
             !auth.isAuthenticated() ||

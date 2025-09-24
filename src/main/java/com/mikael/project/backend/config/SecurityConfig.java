@@ -40,7 +40,7 @@ import java.util.List;
  * </p>
  */
 
-@EnableMethodSecurity
+@EnableMethodSecurity //TODO: admin metoder sjekkes automatisk i controller uten service
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
