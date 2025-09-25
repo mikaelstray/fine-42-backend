@@ -69,4 +69,19 @@ public class AuthController {
             .body(authResponse.user());
   }
 
+  @PostMapping("/logout")
+  public ResponseEntity<Void> logout() {
+    ResponseCookie deleteCookie = ResponseCookie.from(AUTH_COOKIE_NAME, "")
+            .httpOnly(true)
+            .secure(true)
+            .path("/")
+            .maxAge(0)
+            .sameSite("None")
+            .build();
+
+    return ResponseEntity.ok()
+            .header(HttpHeaders.SET_COOKIE, deleteCookie.toString())
+            .build();
+  }
+
 }
