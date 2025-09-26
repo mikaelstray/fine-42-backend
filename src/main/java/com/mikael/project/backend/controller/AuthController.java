@@ -43,6 +43,7 @@ public class AuthController {
             .path("/")
             .maxAge(60 * 60 * 24)
             .sameSite("None")
+            .domain("onrender.com")
             .build();
 
     return ResponseEntity.ok()
@@ -62,6 +63,7 @@ public class AuthController {
             .path("/")
             .maxAge(60 * 60 * 24)
             .sameSite("None")
+            .domain("onrender.com")
             .build();
 
     return ResponseEntity.ok()
@@ -77,6 +79,7 @@ public class AuthController {
             .path("/")
             .maxAge(0)
             .sameSite("None")
+            .domain("onrender.com")
             .build();
 
     return ResponseEntity.ok()
