@@ -99,11 +99,6 @@
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
-			<version>11.13.1</version>
-		</dependency>
 	</dependencies>
 
 	<build>
