@@ -27,17 +27,23 @@ public class UserMapper {
   }
 
   public UserResponse toDto(User user) {
-    HouseholdLiteResponse household = new HouseholdLiteResponse(
-            user.getHousehold().getId(),
-            user.getHousehold().getName(),
-            user.getHousehold().getAdminUser().getId(),
-            user.getHousehold().getMembers().size()
-    );
+    HouseholdLiteResponse household = null;
+
+    if (user.getHousehold() != null) {
+      household = new HouseholdLiteResponse(
+              user.getHousehold().getId(),
+              user.getHousehold().getName(),
+              user.getHousehold().getAdminUser().getId(),
+              user.getHousehold().getMembers().size()
+      );
+    }
+
     Set<String> roles = user.getRoles() == null
             ? Set.of()
             : user.getRoles().stream()
             .map(ur -> ur.getRole().name())
             .collect(Collectors.toSet());
+
     return new UserResponse(
             user.getId(),
             user.getUsername(),

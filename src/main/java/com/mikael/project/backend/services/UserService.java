@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,8 +36,8 @@ public class UserService {
     return userMapper.toDtoList(userRepository.findAll());
   }
 
-  public UserResponse getCurrentUser() {
-    return userMapper.toDto(securityUtil.requireCurrentUser());
+  public Optional<User> getCurrentUser() {
+    return securityUtil.getCurrentUserOptional();
   }
 
   public User findUserById(Long id) {
