@@ -36,7 +36,8 @@ public class FineMapper {
             fine.getDescription(),
             fine.getIssuedAt(),
             receiverDto,
-            giverDto
+            giverDto,
+            fine.getImageUrl()
     );
   }
 

@@ -57,5 +57,8 @@ public class Fine {
   @Enumerated(EnumType.STRING)
   @Column(name = "status", nullable = false)
   private FineStatus status = FineStatus.UNPAID;
+
+  @Column(name = "image_url")
+  private String imageUrl;
 }
 

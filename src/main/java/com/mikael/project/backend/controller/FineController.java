@@ -10,9 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,11 +27,11 @@ public class FineController { //TODO: better endpoints
   private static final Logger logger = LogManager.getLogger(FineController.class);
 
 
-  @PostMapping
+  @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
   public ResponseEntity<FineResponse> create(
-          @Valid @RequestBody FineRequest request
-          ) {
-    FineResponse response = fineService.createFine(request);
+          @RequestPart("fineRequest") FineRequest request,
+          @RequestPart(value = "image", required = false) MultipartFile imageFile) {
+    FineResponse response = fineService.createFine(request, imageFile);
     return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(response);

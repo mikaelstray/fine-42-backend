@@ -4,6 +4,7 @@ import com.mikael.project.backend.config.SecurityUtil;
 import com.mikael.project.backend.exception.CustomErrorMessage;
 import com.mikael.project.backend.exception.customExceptions.AppEntityNotFoundException;
 import com.mikael.project.backend.model.dtos.fine.*;
+import com.mikael.project.backend.model.entity.Household;
 import com.mikael.project.backend.model.entity.fine.Fine;
 import com.mikael.project.backend.model.entity.user.User;
 import com.mikael.project.backend.model.mappers.FineMapper;
@@ -14,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -28,17 +30,24 @@ public class FineService {
   private final FineRepository fineRepository;
   private final SecurityUtil securityUtil;
   private static final Logger logger = LogManager.getLogger(FineService.class);
-
+  private final FileStorageService fileStorageService;
 
   @Transactional
-  public FineResponse createFine(FineRequest request) {
+  public FineResponse createFine(FineRequest request, MultipartFile imageFile) {
     logger.info("adding fine in service");
     User giver = securityUtil.requireCurrentUser();
     User receiver = userService.findUserById(request.receiverId());
+    Household household = giver.getHousehold();
 
     Fine fine = fineMapper.toEntity(request)
             .setGiver(giver)
-            .setReceiver(receiver);
+            .setReceiver(receiver)
+            .setHousehold(household);
+
+    if (imageFile != null && !imageFile.isEmpty()) {
+      String fileName = fileStorageService.storeFile(imageFile);
+      fine.setImageUrl(fileName);
+    }
 
     Fine saved = fineRepository.save(fine);
     log.info("Created Fine id={} issuer={} receiver={}",
