@@ -2,10 +2,9 @@ package com.mikael.project.backend.config;
 
 import com.mikael.project.backend.exception.CustomErrorMessage;
 import com.mikael.project.backend.exception.customExceptions.UnauthorizedOperationException;
-import com.mikael.project.backend.model.entity.Fine;
+import com.mikael.project.backend.model.entity.fine.Fine;
 import com.mikael.project.backend.model.entity.user.User;
 import com.mikael.project.backend.repo.UserRepository;
-import com.mikael.project.backend.services.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
