@@ -36,14 +36,12 @@ public class AuthController {
   ) {
     logger.info("Registering user in controller");
     AuthResponse authResponse = authService.register(request);
-
     ResponseCookie cookie = ResponseCookie.from(AUTH_COOKIE_NAME, authResponse.token())
             .httpOnly(true)
             .secure(true)
             .path("/")
             .maxAge(60 * 60 * 24)
             .sameSite("None")
-            .domain("onrender.com")
             .build();
 
     return ResponseEntity.ok()
@@ -63,7 +61,6 @@ public class AuthController {
             .path("/")
             .maxAge(60 * 60 * 24)
             .sameSite("None")
-            .domain("onrender.com")
             .build();
 
     return ResponseEntity.ok()
@@ -79,7 +76,6 @@ public class AuthController {
             .path("/")
             .maxAge(0)
             .sameSite("None")
-            .domain("onrender.com")
             .build();
 
     return ResponseEntity.ok()

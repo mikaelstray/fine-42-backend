@@ -131,13 +131,13 @@ public class FineService {
 
   public List<FineResponse> getAllFinesInHousehold() {
     User currentUser = securityUtil.requireCurrentUser();
-    Long householdId = currentUser.getHousehold().getId();
+    Long householdId = currentUser.getHousehold().getId(); //TODO: not in hh exception
 
     return fineMapper.toDtoList(fineRepository.findAllByGiver_Household_IdOrReceiver_Household_Id(householdId, householdId));
   }
 
   public void deleteAllFinesInHousehold() {
-    Long householdId = securityUtil.requireCurrentUser().getHousehold().getId();
+    Long householdId = securityUtil.requireCurrentUser().getHousehold().getId(); //TODO: not in hh exception
     fineRepository.deleteAllByHousehold_Id(householdId);
   }
 

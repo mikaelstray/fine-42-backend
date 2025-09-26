@@ -126,7 +126,7 @@ public class HouseholdService {
   public Optional<Household> getHouseholdWithMembersForCurrentUser() {
     User me = securityUtil.requireCurrentUser();
     if (me.getHousehold() == null) {
-      return Optional.empty();
+      return Optional.empty(); //TODO: fix better
     }
     return Optional.of(getHouseholdWithMembers(me.getId()));
   }
@@ -134,7 +134,7 @@ public class HouseholdService {
   public List<?> getAllInHousehold(boolean excludeMe, View view) {
     User currentUser = securityUtil.requireCurrentUser();
 
-    List<User> rawUsers = excludeMe
+    List<User> rawUsers = excludeMe ////TODO: not in hh exception
             ? userRepository.findAllByHousehold_IdAndIdNot(currentUser.getHousehold().getId(), currentUser.getId())
             : userRepository.findAllByHousehold_Id(currentUser.getHousehold().getId());
 
