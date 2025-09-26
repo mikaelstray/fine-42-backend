@@ -1,7 +1,8 @@
-package com.mikael.project.backend.model.entity;
+package com.mikael.project.backend.model.entity.fine;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mikael.project.backend.model.dtos.fine.Status;
+import com.mikael.project.backend.model.entity.Household;
 import com.mikael.project.backend.model.entity.user.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,10 +38,6 @@ public class Fine {
   @Column(name = "issued_at", nullable = false, updatable = false)
   private LocalDateTime issuedAt;
 
-  @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
-  private Status status = Status.ACTIVE;
-
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "receiver_id", nullable = false)
   @EqualsAndHashCode.Exclude
@@ -52,5 +49,13 @@ public class Fine {
   @EqualsAndHashCode.Exclude
   @JsonIgnore
   private User giver;
+
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "household_id", nullable = false)
+  private Household household;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status", nullable = false)
+  private FineStatus status = FineStatus.UNPAID;
 }
 
