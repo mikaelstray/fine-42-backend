@@ -1,7 +1,7 @@
 package com.mikael.project.backend.model.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mikael.project.backend.model.entity.Fine;
+import com.mikael.project.backend.model.entity.fine.Fine;
 import com.mikael.project.backend.model.entity.Household;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,5 +1,7 @@
 package com.mikael.project.backend.model.dtos.user;
 
+import com.mikael.project.backend.model.dtos.household.HouseholdLiteResponse;
+
 import java.util.Set;
 
 /**
@@ -9,5 +11,5 @@ public record UserResponse(
         Long id,
         String username,
         Set<String> roles,
-        Long householdId
+        HouseholdLiteResponse household
 ) {}

@@ -1,8 +1,7 @@
 package com.mikael.project.backend.model.mappers;
 
-import com.mikael.project.backend.model.dtos.fine.FineResponse;
+import com.mikael.project.backend.model.dtos.household.HouseholdLiteResponse;
 import com.mikael.project.backend.model.dtos.user.*;
-import com.mikael.project.backend.model.entity.Fine;
 import com.mikael.project.backend.model.entity.Household;
 import com.mikael.project.backend.model.entity.user.User;
 
@@ -28,9 +27,11 @@ public class UserMapper {
   }
 
   public UserResponse toDto(User user) {
-    Long householdId = Optional.ofNullable(user.getHousehold())
-            .map(Household::getId)
-            .orElse(null);
+    HouseholdLiteResponse household = new HouseholdLiteResponse(
+            user.getHousehold().getId(),
+            user.getHousehold().getName(),
+            user.getHousehold().getAdminUser().getId()
+    );
     Set<String> roles = user.getRoles() == null
             ? Set.of()
             : user.getRoles().stream()
@@ -40,7 +41,7 @@ public class UserMapper {
             user.getId(),
             user.getUsername(),
             roles,
-            householdId
+            household
     );
   }
 
