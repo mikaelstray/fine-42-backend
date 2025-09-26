@@ -4,7 +4,7 @@ import com.mikael.project.backend.config.SecurityUtil;
 import com.mikael.project.backend.exception.CustomErrorMessage;
 import com.mikael.project.backend.exception.customExceptions.AppEntityNotFoundException;
 import com.mikael.project.backend.model.dtos.fine.*;
-import com.mikael.project.backend.model.entity.Fine;
+import com.mikael.project.backend.model.entity.fine.Fine;
 import com.mikael.project.backend.model.entity.user.User;
 import com.mikael.project.backend.model.mappers.FineMapper;
 import com.mikael.project.backend.repo.FineRepository;
@@ -85,19 +85,19 @@ public class FineService {
   public List<FineResponse> getMyDtoFines() {
      User currentUser = securityUtil.requireCurrentUser();
 
-     return fineMapper.toDtoList(fineRepository.findAllByReceiverAndStatus(currentUser, Status.ACTIVE));
+     return fineMapper.toDtoList(fineRepository.findAllByReceiver(currentUser));
   }
 
   public List<FineResponse> getMyFines() {
     User currentUser = securityUtil.requireCurrentUser();
 
-    return fineMapper.toDtoList(fineRepository.findAllByReceiverAndStatus(currentUser, Status.ACTIVE));
+    return fineMapper.toDtoList(fineRepository.findAllByReceiver(currentUser));
   }
 
   public List<FineResponse> getMyGivenFines() {
     User currentUser = securityUtil.requireCurrentUser();
 
-    return fineMapper.toDtoList(fineRepository.findAllByGiverAndStatus(currentUser, Status.ACTIVE));
+    return fineMapper.toDtoList(fineRepository.findAllByGiver(currentUser));
   }
 
   public FineStatsResponse getStats(ListType type) {
@@ -133,6 +133,15 @@ public class FineService {
     User currentUser = securityUtil.requireCurrentUser();
     Long householdId = currentUser.getHousehold().getId();
 
-    return fineMapper.toDtoList(fineRepository.findAllByGiver_Household_IdOrReceiver_Household_IdAndStatus(householdId, householdId, Status.ACTIVE));
+    return fineMapper.toDtoList(fineRepository.findAllByGiver_Household_IdOrReceiver_Household_Id(householdId, householdId));
+  }
+
+  public void deleteAllFinesInHousehold() {
+    Long householdId = securityUtil.requireCurrentUser().getHousehold().getId();
+    fineRepository.deleteAllByHousehold_Id(householdId);
+  }
+
+  public void approveAllFines() {
+    fineRepository.markAllAsPaid();
   }
 }

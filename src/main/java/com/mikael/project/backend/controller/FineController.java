@@ -97,4 +97,15 @@ public class FineController { //TODO: better endpoints
     return ResponseEntity.ok(fines);
   }
 
+  @DeleteMapping("/household")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteAllFinesInHousehold() {
+    fineService.deleteAllFinesInHousehold();
+  }
+
+  @PutMapping("/approve-all") //TODO: secure with hh admin
+  public ResponseEntity<Void> approveAllFines() {
+    fineService.approveAllFines();
+    return ResponseEntity.ok().build();
+  }
 }
