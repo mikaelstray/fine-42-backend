@@ -30,7 +30,8 @@ public class UserMapper {
     HouseholdLiteResponse household = new HouseholdLiteResponse(
             user.getHousehold().getId(),
             user.getHousehold().getName(),
-            user.getHousehold().getAdminUser().getId()
+            user.getHousehold().getAdminUser().getId(),
+            user.getHousehold().getMembers().size()
     );
     Set<String> roles = user.getRoles() == null
             ? Set.of()
