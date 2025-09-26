@@ -145,11 +145,13 @@ public class FineService {
     return fineMapper.toDtoList(fineRepository.findAllByGiver_Household_IdOrReceiver_Household_Id(householdId, householdId));
   }
 
+  @Transactional
   public void deleteAllFinesInHousehold() {
     Long householdId = securityUtil.requireCurrentUser().getHousehold().getId(); //TODO: not in hh exception
     fineRepository.deleteAllByHousehold_Id(householdId);
   }
 
+  @Transactional
   public void approveAllFines() {
     fineRepository.markAllAsPaid();
   }

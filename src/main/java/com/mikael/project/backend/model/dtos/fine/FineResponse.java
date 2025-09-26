@@ -15,5 +15,6 @@ public record FineResponse(
         LocalDateTime issuedAt,
         UserResponse receiver,
         UserResponse giver,
-        String imageUrl
+        String imageUrl,
+        String status
 ) {}
