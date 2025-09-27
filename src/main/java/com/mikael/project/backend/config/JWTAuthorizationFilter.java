@@ -82,10 +82,13 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
   private String resolveToken(HttpServletRequest request) {
     if (request.getCookies() != null) {
       for (Cookie cookie : request.getCookies()) {
+        log.info("Incoming cookie: {}={}", cookie.getName(), cookie.getValue());
         if (AUTH_COOKIE_NAME.equals(cookie.getName())) {
           return cookie.getValue();
         }
       }
+    } else {
+      log.info("No cookies on request");
     }
     String bearer = request.getHeader(HttpHeaders.AUTHORIZATION);
     if (bearer != null && bearer.startsWith(BEARER_PREFIX)) {
