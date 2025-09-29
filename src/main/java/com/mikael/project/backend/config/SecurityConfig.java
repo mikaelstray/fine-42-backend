@@ -60,15 +60,14 @@ public class SecurityConfig {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
-    configuration.setAllowedOriginPatterns(List.of(
+    configuration.setAllowedOrigins(List.of(
             "http://localhost:*",
             "https://fine-frontend.onrender.com"
     ));
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-    configuration.setAllowedHeaders(List.of("Authorization", "Cookie", "Content-Type"));
-    configuration.setExposedHeaders(List.of("Set-Cookie"));
+    configuration.setAllowedHeaders(List.of("Authorization", "Cookie", "Content-Type", "X-Requested-With"));
+    configuration.setExposedHeaders(List.of("Set-Cookie", "Authorization"));
     configuration.setAllowCredentials(true);
-
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
