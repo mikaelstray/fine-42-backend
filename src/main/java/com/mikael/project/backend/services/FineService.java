@@ -76,8 +76,13 @@ public class FineService {
   }
 
   @Transactional
-  public void deleteFine(Long fineId) {
-    fineRepository.deleteById(fineId);
+  public FineResponse deleteFine(Long fineId) {
+    Fine fine = fineRepository.findById(fineId)
+            .orElseThrow(() -> new AppEntityNotFoundException(CustomErrorMessage.FINE_NOT_FOUND));
+
+    fineRepository.deleteById(fine.getId());
+
+    return fineMapper.toDto(fine);
   }
 
   public List<FineResponse> getAllFines() {
@@ -94,19 +99,19 @@ public class FineService {
   public List<FineResponse> getMyDtoFines() {
      User currentUser = securityUtil.requireCurrentUser();
 
-     return fineMapper.toDtoList(fineRepository.findAllByReceiver(currentUser));
+     return fineMapper.toDtoList(fineRepository.findAllByReceiver_Id(currentUser.getId()));
   }
 
-  public List<FineResponse> getMyFines() {
+  public List<Fine> getMyFines() {
     User currentUser = securityUtil.requireCurrentUser();
 
-    return fineMapper.toDtoList(fineRepository.findAllByReceiver(currentUser));
+    return fineRepository.findAllByReceiver_Id(currentUser.getId());
   }
 
-  public List<FineResponse> getMyGivenFines() {
+  public List<Fine> getMyGivenFines() {
     User currentUser = securityUtil.requireCurrentUser();
 
-    return fineMapper.toDtoList(fineRepository.findAllByGiver(currentUser));
+    return fineRepository.findAllByGiver_Id(currentUser.getId());
   }
 
   public FineStatsResponse getStats(ListType type) {
@@ -115,6 +120,13 @@ public class FineService {
       case GIVEN -> fetchGivenStats();
       default -> fetchAllStats();
     };
+  }
+
+  public UserFineStatsResponse getFineStatsByUser(Long userId) {
+    FineStatsResponse givenStats = calculateStats(fineRepository.findAllByGiver_Id(userId)); //TODO: choose between paid and all
+    FineStatsResponse receivedStats = calculateStats(fineRepository.findAllByReceiver_Id(userId));
+
+    return new UserFineStatsResponse(givenStats, receivedStats);
   }
 
   private FineStatsResponse fetchAllStats() {
@@ -129,20 +141,20 @@ public class FineService {
     return calculateStats(getMyFines());
   }
 
-  private static FineStatsResponse calculateStats(List<FineResponse> fines) {
+  private static FineStatsResponse calculateStats(List<Fine> fines) {
     logger.info(fines);
     Integer count = fines.size();
     BigDecimal sum = fines.stream()
-            .map(f -> BigDecimal.valueOf(f.amount()))
+            .map(f -> BigDecimal.valueOf(f.getAmount()))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     return new FineStatsResponse(sum.longValue(), count);
   }
 
-  public List<FineResponse> getAllFinesInHousehold() {
+  public List<Fine> getAllFinesInHousehold() {
     User currentUser = securityUtil.requireCurrentUser();
     Long householdId = currentUser.getHousehold().getId(); //TODO: not in hh exception
 
-    return fineMapper.toDtoList(fineRepository.findAllByGiver_Household_IdOrReceiver_Household_Id(householdId, householdId));
+    return fineRepository.findAllByGiver_Household_IdOrReceiver_Household_Id(householdId, householdId);
   }
 
   @Transactional

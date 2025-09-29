@@ -1,9 +1,8 @@
 package com.mikael.project.backend.controller;
 
-import com.mikael.project.backend.model.dtos.fine.FineRequest;
-import com.mikael.project.backend.model.dtos.fine.FineResponse;
-import com.mikael.project.backend.model.dtos.fine.FineStatsResponse;
-import com.mikael.project.backend.model.dtos.fine.ListType;
+import com.mikael.project.backend.model.dtos.fine.*;
+import com.mikael.project.backend.model.entity.fine.Fine;
+import com.mikael.project.backend.model.mappers.FineMapper;
 import com.mikael.project.backend.services.FineService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +24,7 @@ import java.util.List;
 public class FineController { //TODO: better endpoints
   private final FineService fineService;
   private static final Logger logger = LogManager.getLogger(FineController.class);
+  private final FineMapper mapper;
 
 
   @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
@@ -61,7 +61,7 @@ public class FineController { //TODO: better endpoints
 
   @GetMapping("/me/given")
   public ResponseEntity<List<FineResponse>> getMyGivenFines() {
-    List<FineResponse> myGivenFines = fineService.getMyGivenFines();
+    List<FineResponse> myGivenFines = mapper.toDtoList(fineService.getMyGivenFines());
 
     return ResponseEntity.ok(myGivenFines);
   }
@@ -78,10 +78,12 @@ public class FineController { //TODO: better endpoints
 
   @DeleteMapping("/{fineId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteFine(
+  public ResponseEntity<FineResponse> deleteFine(
           @PathVariable Long fineId
   ) {
-    fineService.deleteFine(fineId);
+    FineResponse fineResponse = fineService.deleteFine(fineId);
+
+    return ResponseEntity.ok(fineResponse);
   }
 
   @GetMapping("/stats")
@@ -94,7 +96,7 @@ public class FineController { //TODO: better endpoints
 
   @GetMapping("/household")
   public ResponseEntity<List<FineResponse>> getAllInMyHousehold() {
-    List<FineResponse> fines = fineService.getAllFinesInHousehold();
+    List<FineResponse> fines = mapper.toDtoList(fineService.getAllFinesInHousehold());
 
     return ResponseEntity.ok(fines);
   }
@@ -109,5 +111,13 @@ public class FineController { //TODO: better endpoints
   public ResponseEntity<Void> approveAllFines() {
     fineService.approveAllFines();
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/stats/{userId}")
+  public ResponseEntity<UserFineStatsResponse> getFinesStatsByUserId(
+          @PathVariable Long userId
+  ) {
+    UserFineStatsResponse userFineStats = fineService.getFineStatsByUser(userId);
+    return ResponseEntity.ok(userFineStats);
   }
 }
