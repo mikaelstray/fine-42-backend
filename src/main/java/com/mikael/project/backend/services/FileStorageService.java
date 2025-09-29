@@ -1,58 +1,36 @@
 package com.mikael.project.backend.services;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.util.StringUtils;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Objects;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class FileStorageService {
 
-  private final Path fileStorageLocation;
-
-  // Hent opplastingsmappe fra application.properties
-  public FileStorageService(@Value("${file.upload-dir:uploads/images}") String uploadDir) {
-    this.fileStorageLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
-
-    try {
-      Files.createDirectories(this.fileStorageLocation);
-    } catch (Exception ex) {
-      throw new RuntimeException("Could not create the directory where the uploaded files will be stored.", ex);
-    }
-  }
+  private final Cloudinary cloudinary;
 
   public String storeFile(MultipartFile file) {
-    // Normaliser filnavn
-    String originalFileName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+    if (file == null || file.isEmpty()) {
+      return null;
+    }
 
     try {
-      if (originalFileName.contains("..")) {
-        throw new RuntimeException("Sorry! Filename contains invalid path sequence " + originalFileName);
-      }
+      String publicId = "fines/" + UUID.randomUUID().toString();
 
-      // Lag et unikt filnavn for å unngå kollisjoner
-      String fileExtension = "";
-      try {
-        fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-      } catch (Exception e) {
-        // Håndter filer uten extension
-      }
-      String uniqueFileName = UUID.randomUUID().toString() + fileExtension;
+      Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
+              "public_id", publicId
+      ));
 
-      // Kopier filen til mål-lokasjonen
-      Path targetLocation = this.fileStorageLocation.resolve(uniqueFileName);
-      Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+      return uploadResult.get("secure_url").toString();
 
-      return uniqueFileName; // Returner kun filnavnet
-    } catch (IOException ex) {
-      throw new RuntimeException("Could not store file " + originalFileName + ". Please try again!", ex);
+    } catch (IOException e) {
+      throw new RuntimeException("Could not store file. Please try again!", e);
     }
   }
 }

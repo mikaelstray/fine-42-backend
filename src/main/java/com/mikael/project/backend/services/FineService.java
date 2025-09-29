@@ -3,6 +3,7 @@ package com.mikael.project.backend.services;
 import com.mikael.project.backend.config.SecurityUtil;
 import com.mikael.project.backend.exception.CustomErrorMessage;
 import com.mikael.project.backend.exception.customExceptions.AppEntityNotFoundException;
+import com.mikael.project.backend.exception.customExceptions.EntityOperationException;
 import com.mikael.project.backend.model.dtos.fine.*;
 import com.mikael.project.backend.model.entity.Household;
 import com.mikael.project.backend.model.entity.fine.Fine;
@@ -17,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -45,8 +47,12 @@ public class FineService {
             .setHousehold(household);
 
     if (imageFile != null && !imageFile.isEmpty()) {
-      String fileName = fileStorageService.storeFile(imageFile);
-      fine.setImageUrl(fileName);
+      try {
+        String imageUrl = fileStorageService.storeFile(imageFile);
+        fine.setImageUrl(imageUrl);
+      } catch (Exception e) {
+        throw new RuntimeException(e); //TODO fix better
+      }
     }
 
     Fine saved = fineRepository.save(fine);
