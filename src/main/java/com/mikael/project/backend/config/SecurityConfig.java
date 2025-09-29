@@ -62,7 +62,7 @@ public class SecurityConfig {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOrigins(List.of(
             "http://localhost:*",
-            "https://fine-frontend.onrender.com"
+            "https://fine-frontend-nginx.onrender.com"
     ));
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(List.of("Authorization", "Cookie", "Content-Type", "X-Requested-With"));
