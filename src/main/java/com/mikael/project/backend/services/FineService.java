@@ -59,7 +59,7 @@ public class FineService {
     log.info("Created Fine id={} issuer={} receiver={}",
             saved.getId(), giver.getUsername(), receiver.getUsername());
 
-    return fineMapper.toDto(saved);
+    return fineMapper.toDto(saved); //TODO: notifications and pagination and mantine noti isntead of toast
   }
 
   @Transactional
